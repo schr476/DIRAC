@@ -68,6 +68,17 @@ class GlobusComputingElement( ComputingElement ):
       diracStamp = makeGuid()[:8]
       queueName = '%s/%s' % ( self.ceName, self.queue )
       cmd = ['globus-job-submit', queueName, "-s", executableFile ]
+      ## Add extra options
+      queueCount = self.ceParameters['QueueCount']
+      queueHostCount = self.ceParameters['QueueHostCount']
+      queuePar = self.ceParameters['QueueParameter']
+      if queueCount:
+        cmd += ['-count',queueCount]
+      if queueHostCount:
+        cmd += ['-host-count',queueHostCount] 
+      if queuePar:
+        cmd += ['-q',queuePar]
+
       #cmd = ['globus-job-submit', '-r %s' % queueName, '-f %s' % jdlName ]
       result = executeGridCommand( self.proxy, cmd, self.gridEnv )
       self.log.verbose(result)
